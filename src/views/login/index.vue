@@ -5,18 +5,18 @@
       <h1>登录</h1>
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
-        <el-form>
-          <el-form-item>
-            <el-input placeholder="请输入用户名" />
+        <el-form ref="form" :model="loginForm" :rules="loginRules">
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" show-password placeholder="请输入密码" />
+          </el-form-item>
+          <el-form-item prop="isAgree">
+            <el-checkbox v-model="loginForm.isAgree"> 用户平台使用协议 </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-input placeholder="请输入密码" />
-          </el-form-item>
-          <el-form-item>
-            <el-checkbox> 用户平台使用协议 </el-checkbox>
-          </el-form-item>
-          <el-form-item>
-            <el-button style="width:350px" type="primary"> 登录 </el-button>
+            <el-button style="width: 350px" type="primary" @click="login"> 登录 </el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -25,7 +25,56 @@
 </template>
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  data() {
+    return {
+      loginForm: {
+        username: 'admin',
+        password: 'admin',
+        isAgree: false
+      },
+      loginRules: {
+        username: [{
+          required: true,
+          message: '请输入用户名',
+          trigger: 'blur'
+        }, {
+          pattern: /^[a-zA-Z0-9_-]{4,16}$/,
+          message: '用户名格式错误',
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }, {
+          min: 5,
+          max: 16,
+          message: '密码长度应该为5-16之间',
+          trigger: 'blur'
+        }],
+        // required只能检测 null undefined ''
+        isAgree: [{
+          validator: (rule, value, callback) => {
+            // rule校验规则
+            // value 校验的值
+            // callback 函数 - promise resolve reject
+            // callback() callback(new Error(错误信息))
+            value ? callback() : callback(new Error('请勾选用户协议'))
+          }
+        }]
+      }
+    }
+  },
+  methods: {
+    login() {
+      this.$refs.form.validate((isOk) => {
+        if (isOk) {
+          alert('登录成功')
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss">
