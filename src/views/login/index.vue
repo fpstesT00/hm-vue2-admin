@@ -6,8 +6,8 @@
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
         <el-form ref="form" :model="loginForm" :rules="loginRules">
-          <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="请输入用户名" />
+          <el-form-item prop="mobile">
+            <el-input v-model="loginForm.mobile" placeholder="请输入手机号" />
           </el-form-item>
           <el-form-item prop="password">
             <el-input v-model="loginForm.password" show-password placeholder="请输入密码" />
@@ -29,18 +29,18 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin',
+        mobile: '',
+        password: '',
         isAgree: false
       },
       loginRules: {
-        username: [{
+        mobile: [{
           required: true,
-          message: '请输入用户名',
+          message: '请输入手机号',
           trigger: 'blur'
         }, {
-          pattern: /^[a-zA-Z0-9_-]{4,16}$/,
-          message: '用户名格式错误',
+          pattern: /^1[3-9]\d{9}$/,
+          message: '手机号格式错误',
           trigger: 'blur'
         }],
         password: [{
@@ -70,7 +70,8 @@ export default {
     login() {
       this.$refs.form.validate((isOk) => {
         if (isOk) {
-          alert('登录成功')
+          // 调用context里的dispatch方法
+          this.$store.dispatch('user/login', this.loginForm)
         }
       })
     }
