@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '@/store'
 import { Message } from 'element-ui'
 const service = axios.create({
-  baseURL: '/api', // 基础地址
+  baseURL: process.env.VUE_APP_BASE_API, // 基础地址
   timeout: 10000
 })
 // 请求拦截器 可以携带公共参数token
