@@ -18,6 +18,7 @@
           <el-form-item>
             <el-button style="width: 350px" type="primary" @click="login"> 登录 </el-button>
           </el-form-item>
+          <el-button @click="testApi">测试接口</el-button>
         </el-form>
       </el-card>
     </div>
@@ -48,9 +49,9 @@ export default {
           message: '请输入密码',
           trigger: 'blur'
         }, {
-          min: 5,
+          min: 6,
           max: 16,
-          message: '密码长度应该为5-16之间',
+          message: '密码长度应该为6-16之间',
           trigger: 'blur'
         }],
         // required只能检测 null undefined ''
