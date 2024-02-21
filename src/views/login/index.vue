@@ -18,7 +18,6 @@
           <el-form-item>
             <el-button style="width: 350px" type="primary" @click="login"> 登录 </el-button>
           </el-form-item>
-          <el-button @click="testApi">测试接口</el-button>
         </el-form>
       </el-card>
     </div>
@@ -30,9 +29,9 @@ export default {
   data() {
     return {
       loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002' : '',
+        password: process.env.NODE_ENV === 'development' ? 'hm#qd@23!' : '',
+        isAgree: true
       },
       loginRules: {
         mobile: [{
@@ -69,10 +68,12 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.form.validate((isOk) => {
+      this.$refs.form.validate(async(isOk) => {
         if (isOk) {
           // 调用context里的dispatch方法
-          this.$store.dispatch('user/login', this.loginForm)
+          await this.$store.dispatch('user/login', this.loginForm)
+          // 登录成功 跳转主页
+          this.$router.push('/')
         }
       })
     }
