@@ -7,8 +7,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <!-- 头像 -->
+          <img v-if="avatar" :src="avatar" class="user-avatar">
+          <span v-else class="username" :style="{ backgroundColor: randomColor }">{{ name?.charAt(2) }}</span>
+          <span class="name">{{ name }}</span>
+          <i class="el-icon-setting" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -41,11 +44,16 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  // 引入头像和昵称
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
-    ])
+      'avatar',
+      'name'
+    ]),
+    randomColor() {
+      return this.getRandomColor()
+    }
   },
   methods: {
     toggleSideBar() {
@@ -54,6 +62,14 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    getRandomColor() {
+      const letters = '0123456789ABCDEF'
+      let color = '#'
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)]
+      }
+      return color
     }
   }
 }
@@ -117,20 +133,37 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
-        .user-avatar {
+        display: flex;
+        align-items: center;
+        .username {
+          margin-right: 10px;
+          text-align: center;
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          font-size: 16px;
+          color: #fff;
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+          user-select: none;
+          border-radius: 50%;
         }
-
-        .el-icon-caret-bottom {
+        .name {
+          cursor:default;
+          margin-right: 10px;
+          user-select: none;
+          font-size: 16px;
+        }
+        .el-icon-setting {
           cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          user-select: none;
+          font-size: 20px;
+        }
+        .user-avatar {
+          margin-right: 10px;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
         }
       }
     }
