@@ -36,6 +36,10 @@ const actions = {
     // console.log('测试')
     const result = await getUserInfo()
     context.commit('setUserInfo', result)
+  },
+  logout(context) {
+    context.commit('removeToken')
+    context.commit('setUserInfo', {})
   }
 }
 
