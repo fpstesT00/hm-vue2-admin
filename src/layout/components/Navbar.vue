@@ -79,16 +79,9 @@ export default {
       rules: {
         oldPassword: [{ required: true, message: '旧密码不能为空', trigger: 'blur' }],
         newPassword: [{ required: true, message: '新密码不能为空', trigger: 'blur' }, {
-          validator: (rule, value, callback) => {
-          // 正则表达式来检查密码是否符合要求
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,16}$/
-            if (!passwordRegex.test(value)) {
-              callback(new Error('密码必须包含大小写字母、数字，长度为6-16位')) // 返回提示消息
-            } else {
-              callback() // 验证通过
-            }
-          },
-          trigger: 'blur'
+          min: 6,
+          max: 16,
+          message: '密码长度为6-16位'
         }],
         confirmPassword: [{ required: true, message: '确认密码不能为空', trigger: 'blur' }, {
           validator: (rule, value, callback) => {
