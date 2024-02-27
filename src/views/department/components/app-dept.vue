@@ -14,7 +14,15 @@
           placeholder="请选择负责人"
           style="width: 80%"
           size="mini"
-        />
+        >
+          <!-- 下拉选项 循环 负责人的名字 laber表示显示的字段 value表示存储的字段 -->
+          <el-option
+            v-for="item in managerList"
+            :key="item.id"
+            :label="item.username"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item prop="introduce" label="部门介绍">
         <el-input
@@ -38,7 +46,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, getManagerList } from '@/api/department'
 export default {
   props: {
     showDialog: {
@@ -48,6 +56,7 @@ export default {
   },
   data() {
     return {
+      managerList: [],
       formData: {
         code: '', // 部门编码
         introduce: '', // 部门介绍
@@ -69,7 +78,7 @@ export default {
             validator: async(rule, value, callback) => {
               // vulue就是输入的编码
               const result = await getDepartment()
-              if (result.some(item => item.code === value)) {
+              if (result.some((item) => item.code === value)) {
                 callback(new Error('部门中已经有该编码了'))
               } else {
                 callback()
@@ -105,7 +114,7 @@ export default {
             validator: async(rule, value, callback) => {
               // vulue就是输入的编码
               const result = await getDepartment()
-              if (result.some(item => item.name === value)) {
+              if (result.some((item) => item.name === value)) {
                 callback(new Error('部门中已经有该名称了'))
               } else {
                 callback()
@@ -116,10 +125,18 @@ export default {
       }
     }
   },
+  created() {
+    // 获取部门数据
+    this.getManagerList()
+  },
   methods: {
     close() {
       // 修改父组件的值 子传父
       this.$emit('update:showDialog', false)
+    },
+    async getManagerList() {
+      const result = await getManagerList()
+      this.managerList = result
     }
   }
 }

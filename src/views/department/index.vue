@@ -7,7 +7,7 @@
         <!-- v-slot="{ node, data }" 只能作用在template -->
         <template v-slot="{ data }">
           <el-row
-            class="tree-row"
+            style="width: 100%; height: 40px"
             type="flex"
             justify="space-between"
             align="middle"
@@ -24,13 +24,9 @@
                 </span>
                 <!-- 下拉菜单选项 -->
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                    v-for="(item, index) in dropdownItems"
-                    :key="index"
-                    :command="item.command"
-                  >
-                    {{ item.label }}
-                  </el-dropdown-item>
+                  <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+                  <el-dropdown-item command="edit">编辑部门</el-dropdown-item>
+                  <el-dropdown-item command="del">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
@@ -52,11 +48,6 @@ export default {
   components: { AddDept },
   data() {
     return {
-      dropdownItems: [
-        { command: 'add', label: '添加子部门' },
-        { command: 'edit', label: '编辑部门' },
-        { command: 'del', label: '删除' }
-      ],
       showDialog: false,
       depts: [], // 数据属性
       defaultProps: {
@@ -85,10 +76,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.tree-row {
-  width: 100%;
-  height: 40px;
-}
 .app-container {
   padding: 30px 140px;
   font-size: 14px;
