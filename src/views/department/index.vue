@@ -16,7 +16,7 @@
             <el-col :span="4">
               <span class="tree-manager">{{ data.managerName }}</span>
               <!-- $event 实参 表示类型 -->
-              <el-dropdown trigger="click" @command="operateDept">
+              <el-dropdown trigger="click" @command="operateDept($event,data.id)">
                 <!-- 显示区域内容 -->
                 <span class="el-dropdown-link">
                   操作
@@ -36,7 +36,7 @@
     </div>
     <!-- 放置弹层 -->
     <!-- 表示会接受子组件的事件 -->
-    <add-dept :show-dialog.sync="showDialog" />
+    <add-dept :sub-department-id="subDepartmentId" :show-dialog.sync="showDialog" />
   </div>
 </template>
 <script>
@@ -48,6 +48,7 @@ export default {
   components: { AddDept },
   data() {
     return {
+      subDepartmentId: null,
       showDialog: false,
       depts: [], // 数据属性
       defaultProps: {
@@ -66,10 +67,11 @@ export default {
       this.depts = transListToTreeData(result, 0)
     },
     // 操作部门方法
-    operateDept(type) {
+    operateDept(type, id) {
       // 新增部门
       if (type === 'add') {
         this.showDialog = true
+        this.subDepartmentId = id
       }
     }
   }

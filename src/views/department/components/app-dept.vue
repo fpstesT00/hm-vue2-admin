@@ -52,6 +52,10 @@ export default {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    subDepartmentId: {
+      type: String,
+      default: ''
     }
   },
   data() {
