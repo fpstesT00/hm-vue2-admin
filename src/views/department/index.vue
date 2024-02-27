@@ -7,30 +7,32 @@
         <!-- v-slot="{ node, data }" 只能作用在template -->
         <template v-slot="{ data }">
           <el-row
-            style="width: 100%; height: 40px"
+            class="tree-row"
             type="flex"
             justify="space-between"
             align="middle"
           >
             <el-col>{{ data.name }}</el-col>
             <el-col :span="4">
-              <div class="drop-menu">
-                <span class="tree-manager">{{ data.managerName }}</span>
-                <!-- $event 实参 表示类型 -->
-                <el-dropdown trigger="click" @command="operateDept">
-                  <!-- 显示区域内容 -->
-                  <span class="el-dropdown-link">
-                    操作
-                    <i class="el-icon-arrow-down el-icon--right" />
-                  </span>
-                  <!-- 下拉菜单选项 -->
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="add">添加子部门</el-dropdown-item>
-                    <el-dropdown-item command="edit">编辑部门</el-dropdown-item>
-                    <el-dropdown-item command="del">删除</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </div>
+              <span class="tree-manager">{{ data.managerName }}</span>
+              <!-- $event 实参 表示类型 -->
+              <el-dropdown trigger="click" @command="operateDept">
+                <!-- 显示区域内容 -->
+                <span class="el-dropdown-link">
+                  操作
+                  <i class="el-icon-arrow-down el-icon--right" />
+                </span>
+                <!-- 下拉菜单选项 -->
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    v-for="(item, index) in dropdownItems"
+                    :key="index"
+                    :command="item.command"
+                  >
+                    {{ item.label }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </el-col>
           </el-row>
         </template>
@@ -50,6 +52,11 @@ export default {
   components: { AddDept },
   data() {
     return {
+      dropdownItems: [
+        { command: 'add', label: '添加子部门' },
+        { command: 'edit', label: '编辑部门' },
+        { command: 'del', label: '删除' }
+      ],
       showDialog: false,
       depts: [], // 数据属性
       defaultProps: {
@@ -78,18 +85,17 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.tree-row {
+  width: 100%;
+  height: 40px;
+}
 .app-container {
   padding: 30px 140px;
   font-size: 14px;
 }
-.drop-menu {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .tree-manager {
   width: 50px;
   display: inline-block;
-  margin: 40px;
+  margin: 30px;
 }
 </style>
