@@ -36,11 +36,12 @@
     </div>
     <!-- 放置弹层 -->
     <!-- 表示会接受子组件的事件 -->
-    <add-dept :sub-department-id="subDepartmentId" :show-dialog.sync="showDialog" />
+    <!-- ref可以拿到 子组件实例 -->
+    <add-dept ref="addDept" :dialog-title="dialogTitle" :sub-department-id="subDepartmentId" :show-dialog.sync="showDialog" @updateTheDepartment="getDepartment" />
   </div>
 </template>
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, delDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils'
 import AddDept from './components/app-dept.vue'
 export default {
@@ -48,6 +49,7 @@ export default {
   components: { AddDept },
   data() {
     return {
+      dialogTitle: '',
       subDepartmentId: null,
       showDialog: false,
       depts: [], // 数据属性
@@ -72,6 +74,32 @@ export default {
       if (type === 'add') {
         this.showDialog = true
         this.subDepartmentId = id
+        this.dialogTitle = '新增部门'
+      } else if (type === 'edit') {
+        // 编辑部门
+        this.showDialog = true
+        this.dialogTitle = '编辑部门'
+        this.subDepartmentId = id
+        // 更新props是异步
+        // 调用子组件方法是同步
+        this.$nextTick(() => {
+          this.$refs.addDept.getDepartmentDetail()
+        })
+      } else {
+        // 删除部门
+        this.$confirm('您确定要删除该部门吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+          // 调用删除接口
+          await delDepartment(id)
+          // 重新拉起数据
+          this.$message.success('删除部门成功')
+          this.getDepartment()
+        }).catch(() => {
+          this.$message('已取消删除')
+        })
       }
     }
   }
